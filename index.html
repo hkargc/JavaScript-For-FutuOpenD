@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh">
+ <head> 
+  <meta charset="utf-8" /> 
+  <title>测试页面</title> 
+  <script src="./js/futu.js"></script> 
+  <script src="./js/protobuf.min.js"></script> 
+ </head> 
+<body>
+<textarea id="msg" style="width:500px;height:400px;"></textarea>
+<script>
+window.onload = function() {
+    var ft = new futu();
+	ft.pburl = './pb/';
+	ft.callback = function(o){
+		var cmd = o.cmd; 
+		var ret = o.ret['s2c'];
+		
+		if(o.cmd == 1){ //成功连上了
+			//ft.send(1002, {'userID':0});
+			ft.send(3001, {'securityList':[{'market':1,'code':'00700'}],'subTypeList':[11],'isSubOrUnSub':true,'isRegOrUnRegPush':true,'regPushRehabTypeList':[1],'isFirstPush':false});
+		}
+		if(o.cmd == 3001){ //订阅成功
+			ft.send(3006, {'rehabType':0,'klType':1,'security':{'market':1,'code':'00700'},'reqNum':1000});
+		}
+		if(o.cmd == 3006){ //返回的1分K
+			
+		}
+		ft.log(o)
+		
+		document.getElementById("msg").value = ft.ftCmdID[o.cmd] + "\n" + document.getElementById("msg").value;
+	}
+    //ft.start('vm.local.com', 8080, true, '4c1184f37cff01bcdc32dc486ec36961');
+	ft.start('192.168.2.128', 8080, false, '');
+};
+</script> 
+</body>
+</html>
