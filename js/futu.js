@@ -1,87 +1,87 @@
 "use strict";
 /**
  * ft-websocket的简单实现
- * 
+ * @author hkargv@139.com
  */
 function futu() {
     var self = this;
 
     this.wsuri = "";
-	this.pburl = "./pb/"; //proto文件web访问路径
-	this.debug = true;
+    this.pburl = "/pb/"; //proto文件web访问路径
+    this.debug = true;
     this.ftWebsocketSection = 0; //包序列,递增的数字
     this.ftWebsocketHeadLength = 44; //响应包的头长度
     this.ftWebsocketHeadSign = "ft-v1.0"; //请求包起始串
-	this.callback = {}; //回调函数
+    this.callback = {}; //回调函数
     this.ftCmdID = {
         1: 'InitWebSocket',
-		1001:'GetGlobalState',
-		1002:'GetGlobalState',
-		1003:'Notify',
-		1004:'KeepAlive',
-		1005:'GetUserInfo',
-		1007:'GetDelayStatistics',
-		3001:'Qot_Sub',
-		3002:'Qot_RegQotPush',
-		3003:'Qot_GetSubInfo',
-		3004:'Qot_GetBasicQot',
-		3005:'Qot_UpdateBasicQot',
-		3006:'Qot_GetKL',
-		3007:'Qot_UpdateKL',
-		3008:'Qot_GetRT',
-		3009:'Qot_UpdateRT',
-		3010:'Qot_GetTicker',
-		3011:'Qot_UpdateTicker',
-		3012:'Qot_GetOrderBook',
-		3013:'Qot_UpdateOrderBook',
-		3014:'Qot_GetBroker',
-		3015:'Qot_UpdateBroker',
-		3016:'Qot_GetOrderDetail',
-		3017:'Qot_UpdateOrderDetail',
-		3019:'Qot_UpdatePriceReminder',
-		3100:'Qot_GetHistoryKL',
-		3101:'Qot_GetHistoryKLPoints',
-		3102:'Qot_GetRehab',
-		3103:'Qot_RequestHistoryKL',
-		3104:'Qot_RequestHistoryKLQuota',
-		3105:'Qot_RequestRehab',
-		3200:'Qot_GetTradeDate',
-		3201:'Qot_GetSuspend',
-		3202:'Qot_GetStaticInfo',
-		3203:'Qot_GetSecuritySnapshot',
-		3204:'Qot_GetPlateSet',
-		3205:'Qot_GetPlateSecurity',
-		3206:'Qot_GetReference',
-		3207:'Qot_GetOwnerPlate',
-		3208:'Qot_GetHoldingChangeList',
-		3209:'Qot_GetOptionChain',
-		3210:'Qot_GetWarrant',
-		3211:'Qot_GetCapitalFlow',
-		3212:'Qot_GetCapitalDistribution',
-		3213:'Qot_GetUserSecurity',
-		3214:'Qot_ModifyUserSecurity',
-		3215:'Qot_StockFilter',
-		3216:'Qot_GetCodeChange',
-		3217:'Qot_GetIpoList',
-		3218:'Qot_GetFutureInfo',
-		3219:'Qot_RequestTradeDate',
-		3220:'Qot_SetPriceReminder',
-		3221:'Qot_GetPriceReminder',
-		3222:'Qot_GetUserSecurityGroup',
-		2001:'Trd_GetAccList',
-		2005:'Trd_UnlockTrade',
-		2008:'Trd_SubAccPush',
-		2101:'Trd_GetFunds',
-		2102:'Trd_GetPositionList',
-		2111:'Trd_GetMaxTrdQtys',
-		2201:'Trd_GetOrderList',
-		2202:'Trd_PlaceOrder',
-		2205:'Trd_ModifyOrder',
-		2208:'Trd_UpdateOrder',
-		2211:'Trd_GetOrderFillList',
-		2218:'Trd_UpdateOrderFill',
-		2221:'Trd_GetHistoryOrderList',
-		2222:'Trd_GetHistoryOrderFillList'
+        1001: 'GetGlobalState',
+        1002: 'GetGlobalState',
+        1003: 'Notify',
+        1004: 'KeepAlive',
+        1005: 'GetUserInfo',
+        1007: 'GetDelayStatistics',
+        3001: 'Qot_Sub',
+        3002: 'Qot_RegQotPush',
+        3003: 'Qot_GetSubInfo',
+        3004: 'Qot_GetBasicQot',
+        3005: 'Qot_UpdateBasicQot',
+        3006: 'Qot_GetKL',
+        3007: 'Qot_UpdateKL',
+        3008: 'Qot_GetRT',
+        3009: 'Qot_UpdateRT',
+        3010: 'Qot_GetTicker',
+        3011: 'Qot_UpdateTicker',
+        3012: 'Qot_GetOrderBook',
+        3013: 'Qot_UpdateOrderBook',
+        3014: 'Qot_GetBroker',
+        3015: 'Qot_UpdateBroker',
+        3016: 'Qot_GetOrderDetail',
+        3017: 'Qot_UpdateOrderDetail',
+        3019: 'Qot_UpdatePriceReminder',
+        3100: 'Qot_GetHistoryKL',
+        3101: 'Qot_GetHistoryKLPoints',
+        3102: 'Qot_GetRehab',
+        3103: 'Qot_RequestHistoryKL',
+        3104: 'Qot_RequestHistoryKLQuota',
+        3105: 'Qot_RequestRehab',
+        3200: 'Qot_GetTradeDate',
+        3201: 'Qot_GetSuspend',
+        3202: 'Qot_GetStaticInfo',
+        3203: 'Qot_GetSecuritySnapshot',
+        3204: 'Qot_GetPlateSet',
+        3205: 'Qot_GetPlateSecurity',
+        3206: 'Qot_GetReference',
+        3207: 'Qot_GetOwnerPlate',
+        3208: 'Qot_GetHoldingChangeList',
+        3209: 'Qot_GetOptionChain',
+        3210: 'Qot_GetWarrant',
+        3211: 'Qot_GetCapitalFlow',
+        3212: 'Qot_GetCapitalDistribution',
+        3213: 'Qot_GetUserSecurity',
+        3214: 'Qot_ModifyUserSecurity',
+        3215: 'Qot_StockFilter',
+        3216: 'Qot_GetCodeChange',
+        3217: 'Qot_GetIpoList',
+        3218: 'Qot_GetFutureInfo',
+        3219: 'Qot_RequestTradeDate',
+        3220: 'Qot_SetPriceReminder',
+        3221: 'Qot_GetPriceReminder',
+        3222: 'Qot_GetUserSecurityGroup',
+        2001: 'Trd_GetAccList',
+        2005: 'Trd_UnlockTrade',
+        2008: 'Trd_SubAccPush',
+        2101: 'Trd_GetFunds',
+        2102: 'Trd_GetPositionList',
+        2111: 'Trd_GetMaxTrdQtys',
+        2201: 'Trd_GetOrderList',
+        2202: 'Trd_PlaceOrder',
+        2205: 'Trd_ModifyOrder',
+        2208: 'Trd_UpdateOrder',
+        2211: 'Trd_GetOrderFillList',
+        2218: 'Trd_UpdateOrderFill',
+        2221: 'Trd_GetHistoryOrderList',
+        2222: 'Trd_GetHistoryOrderFillList'
     };
 
     /**
@@ -146,10 +146,10 @@ function futu() {
     };
 
     this.packBuff = function(cmd, section, buff) {
-		if(! (buff instanceof Uint8Array)){
-			return false;
-		}
-        var buffer = new ArrayBuffer(20+buff.byteLength);
+        if (!(buff instanceof Uint8Array)) {
+            return false;
+        }
+        var buffer = new ArrayBuffer(20 + buff.byteLength);
         var view = new DataView(buffer);
 
         var bytes = self.stringToUtf8ByteArray(self.ftWebsocketHeadSign);
@@ -163,20 +163,20 @@ function futu() {
         view.setUint32(8, cmd, false);
 
         view.setBigUint64(12, BigInt(section), false); //BigInt有浏览器兼容性问题
-		
-		for(var i=0; i<buff.byteLength; i++){
-			view.setUint8(20+i, buff[i]);
-		}
-		
+
+        for (var i = 0; i < buff.byteLength; i++) {
+            view.setUint8(20 + i, buff[i]);
+        }
+
         return buffer;
     };
 
     this.unpackBuff = function(buffer) {
-        if (! (buffer instanceof ArrayBuffer)) {
+        if (!(buffer instanceof ArrayBuffer)) {
             return {};
         }
-		var result = {};
-		
+        var result = {};
+
         var view = new DataView(buffer);
 
         result.sign = new Array();
@@ -203,28 +203,28 @@ function futu() {
             return result;
         }
         var pb = self.ftCmdID[result.cmd];
-		if(pb === undefined){
-			return result;
-		}
+        if (pb === undefined) {
+            return result;
+        }
         protobuf.load(self.pburl + pb + ".proto", function(error, root) {
             if (error) {
-				self.log(['protobuf.load', error]);
+                self.log(['protobuf.load', error]);
             }
             var AwesomeMessage = root.lookupType(pb + ".Response");
 
             result.ret = AwesomeMessage.decode(buffer);
-			
-			if(typeof(self.callback) == 'function'){
-				self.callback(result);
-			}
+
+            if (typeof(self.callback) == 'function') {
+                self.callback(result);
+            }
         });
     };
     /**
-	 * @param String ip ft-websocket所在的ip或主机名
-	 * @param int port 端口
-	 * @param bool ssl 是否启用了SSL,如果是在https下,必须启用;配置FutuOpenD.xml中的(websocket_private_key+websocket_cert)与WEB服务器一致
-	 * @param String websocketKey 对应FutuOpenD.xml中配置的websocketKey
-	 */
+     * @param String ip ft-websocket所在的ip或主机名
+     * @param int port 端口
+     * @param bool ssl 是否启用了SSL,如果是在https下,必须启用;配置FutuOpenD.xml中的(websocket_private_key+websocket_cert)与WEB服务器一致
+     * @param String websocketKey 对应FutuOpenD.xml中配置的websocketKey
+     */
     this.start = function(ip, port, ssl, websocketKey) {
         if (ssl) {
             this.wsuri = "wss://" + ip + ":" + port;
@@ -235,62 +235,64 @@ function futu() {
         self.websocket = new WebSocket(this.wsuri);
         self.websocket.binaryType = "arraybuffer";
         self.websocket.addEventListener('open', function(e) {
-			var payload = {};
-			payload.clientID = 'JavaScript';
-			if(websocketKey && (websocketKey.length == 32)){
-				payload.websocketKey = websocketKey;
-			}
+            var payload = {};
+            payload.clientID = 'JavaScript';
+            if (websocketKey && (websocketKey.length == 32)) {
+                payload.websocketKey = websocketKey;
+            }
             self.send(1, payload);
         });
         self.websocket.addEventListener('message', function(e) {
             self.unpackBuff(e.data);
         });
         self.websocket.addEventListener('close', function(e) {
-			self.log(["websocket", "close"]);
+            self.log(["websocket", "close"]);
         });
         self.websocket.addEventListener('error', function(e) {
-			self.log(["websocket", "error"]);
+            self.log(["websocket", "error"]);
         });
     };
-	/**
-	 * @param int cmd 协议号,每个协议号对应一个proto文档
-	 * @param Object payload proto中c2s的部分
-	 * @return false/int 返回此次请求的序列号
-	 */
+    /**
+     * @param int cmd 协议号,每个协议号对应一个proto文档
+     * @param Object payload proto中c2s的部分
+     * @return false/int 返回此次请求的序列号
+     */
     this.send = function(cmd, payload) {
         var pb = self.ftCmdID[cmd];
-		if(pb === undefined){
-			return false;
-		}
-		
-		self.ftWebsocketSection++;
-		
+        if (pb === undefined) {
+            return false;
+        }
+
+        self.ftWebsocketSection++;
+
         protobuf.load(self.pburl + pb + ".proto", function(error, root) {
             if (error) {
-				self.log(["protobuf.load", error]);
+                self.log(["protobuf.load", error]);
             }
             var AwesomeMessage = root.lookupType(pb + ".Request");
-			
-			payload = {'c2s':payload};
-			
+
+            payload = {
+                'c2s': payload
+            };
+
             var errMsg = AwesomeMessage.verify(payload);
             if (errMsg) {
-				self.log(["protobuf.verify", errMsg]);
+                self.log(["protobuf.verify", errMsg]);
             }
             var message = AwesomeMessage.create(payload);
             var buffer = AwesomeMessage.encode(message).finish();
 
             var arrayBuff = self.packBuff(cmd, self.ftWebsocketSection, buffer);
-			if(arrayBuff !== false){
-				self.websocket.send(arrayBuff);
-			}
+            if (arrayBuff !== false) {
+                self.websocket.send(arrayBuff);
+            }
         });
-		
-		return self.ftWebsocketSection;
+
+        return self.ftWebsocketSection;
     };
-	this.log = function(o){
-		if(this.debug){
-			console.log(o);
-		}
-	};
+    this.log = function(o) {
+        if (this.debug) {
+            console.log(o);
+        }
+    };
 }
