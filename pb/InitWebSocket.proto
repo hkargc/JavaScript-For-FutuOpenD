@@ -7,11 +7,13 @@ message C2S
    optional string RSAPrivateKey = 3; //与opend连接的密钥（正文而非路径）
    optional string websocketKey = 4;
    optional string clientID = 5;
+   optional string programmingLanguage = 6;
 }
 
 message S2C
 {
 	optional int64 serverTime = 1; //服务器回包时的格林威治时间戳，单位秒
+	optional uint64 connID = 2; //连接ID
 }
 
 message Request
